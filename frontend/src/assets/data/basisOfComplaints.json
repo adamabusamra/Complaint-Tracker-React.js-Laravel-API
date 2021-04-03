@@ -1,0 +1,26 @@
+[
+  { "value": "Race", "label": "Race" },
+  { "value": "Creed", "label": "Creed" },
+  { "value": "Religon", "label": "Religon" },
+  { "value": "Sex", "label": "Sex" },
+  { "value": "Culture", "label": "Culture" },
+  { "value": "Color", "label": "Color" },
+  { "value": "Age", "label": "Age" },
+  {
+    "value": "Mental or pyhsical disability",
+    "label": "Mental or pyhsical disability"
+  },
+  { "value": "Veteran Status", "label": "Veteran Status" },
+  { "value": "Genetic Information", "label": "Genetic Information" },
+  { "value": "National Origin", "label": "National Origin" },
+  { "value": "Sexual Orientation", "label": "Sexual Orientation" },
+  {
+    "value": "Social Origin or Condition",
+    "label": "Social Origin or Condition"
+  },
+  { "value": "Retaliation", "label": "Retaliation" },
+  { "value": "Political Belief", "label": "Political Belief" },
+  { "value": "Marital Status", "label": "Marital Status" },
+  { "value": "Ancestry", "label": "Ancestry" },
+  { "value": "Other", "label": "Other" }
+]
