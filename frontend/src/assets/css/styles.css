@@ -1,5 +1,6 @@
 body {
   background-color: #ebedf3;
+  position: relative;
 }
 #admin-header {
   padding-left: 160px;
@@ -42,4 +43,14 @@ body {
 }
 .form-card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.time-keeper {
+  /* background: red; */
+  /* margin-left: 220px; */
+  z-index: 9;
+  /* padding-bottom: -500px; */
+  display: inline;
+  position: absolute;
+  top: 92%;
+  left: 43%;
 }

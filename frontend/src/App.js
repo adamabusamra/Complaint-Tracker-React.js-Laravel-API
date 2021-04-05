@@ -3,7 +3,12 @@ import React from "react";
 import "./assets/css/styles.css";
 
 // React router
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 
 //Navbar
 import Header from "./components/layout/Header";
@@ -66,6 +71,11 @@ const AdminLayout = ({ exact, path, component: Component, ...rest }) => {
 };
 
 function App() {
+  const clearStorage = () => {
+    localStorage.removeItem("sanctum-token");
+
+    localStorage.removeItem("user");
+  };
   return (
     <Router>
       {/* Include navbar on all pages */}
@@ -77,7 +87,16 @@ function App() {
         <PublicLayout exact path="/about" component={About} />
         <PublicLayout exact path="/login" component={Login} />
         <PublicLayout exact path="/register" component={Register} />
-        <PublicLayout exact path="/compliants" component={MyCompliants} />
+        <PublicLayout exact path="/complaints" component={MyCompliants} />
+        <PublicLayout exact path="/complaints" component={MyCompliants} />
+        <PublicLayout exact path="/Logout">
+          {clearStorage}
+          <Redirect
+            to={{
+              pathname: "/login",
+            }}
+          />
+        </PublicLayout>
         {/* Admin Routes */}
         <AdminLayout exact path="/admin" component={AdminHome} />
         <AdminLayout exact path="/admin/login" component={AdminLogin} />

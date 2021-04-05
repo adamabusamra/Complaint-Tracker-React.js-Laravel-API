@@ -1,7 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ history }) => {
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+  const submitHandler = async () => {
+    try {
+      let response = await fetch("http://127.0.0.1:8000/api/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
+      });
+      let data = await response.json();
+      // console.log(data.user);
+      // console.log(data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("sanctum-token", JSON.stringify(data.token));
+      if (data.token) {
+        history.push("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <div className="container ">
@@ -26,6 +55,7 @@ const Login = () => {
                   id="email"
                   name="email"
                   placeholder="Enter email"
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
               </div>
               <div className="form-group">
@@ -36,9 +66,17 @@ const Login = () => {
                   id="email"
                   name="password"
                   placeholder="Enter Password"
+                  onChange={(e) =>
+                    setForm({ ...form, password: e.target.value })
+                  }
                 />
               </div>
-              <button type="submit" className="btn btn-dark col-12" id="submit">
+              <button
+                type="submit"
+                className="btn btn-dark col-12"
+                id="submit"
+                onClick={submitHandler}
+              >
                 Submit
               </button>
             </div>

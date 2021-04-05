@@ -3,9 +3,51 @@ import Select from "react-select";
 import countries from "../../../assets/data/countries.json";
 import basisOfComplaint from "../../../assets/data/basisOfComplaints.json";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-const Home = () => {
+import moment from "moment";
+// import TimePicker from "react-time-picker";
+import Timekeeper from "react-timekeeper";
+
+// My css --just edited the wrapper to be 100% width
+import "../../../assets/css/react-date-picker.css";
+// Their css
+// import "react-datepicker/dist/react-datepicker.css";
+
+const Home = ({ history }) => {
   const [startDate, setStartDate] = useState(new Date());
+  const [theDate, setTheDate] = useState(new Date());
+  const [time, setTime] = useState("10:30");
+  const [showTime, setShowTime] = useState(false);
+  const [form, setForm] = useState({});
+  const submitHandler = async () => {
+    let newForm = { ...form };
+    newForm.incident_datetime = `${startDate} ${time}`;
+    console.log(JSON.parse(localStorage.getItem("sanctum-token")));
+    try {
+      let response = await fetch("http://127.0.0.1:8000/api/complaints", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("sanctum-token")
+          )}`,
+        },
+        body: JSON.stringify({
+          data: newForm,
+        }),
+      });
+      let data = await response.json();
+      console.log(data);
+      // console.log(data.token);
+      // localStorage.setItem("user", JSON.stringify(data.user));
+      // localStorage.setItem("sanctum-token", JSON.stringify(data.token));
+      if (data.message == "Success") {
+        history.push("/complaints");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="row mt-5 bg-white p-4 rounded form-card">
       <div className="col-sm-12">
@@ -22,6 +64,7 @@ const Home = () => {
                 className="form-control"
                 placeholder="Name"
                 name="name"
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
               />
             </div>
@@ -32,27 +75,14 @@ const Home = () => {
                 className="form-control"
                 placeholder="Mobile Number"
                 name="number"
+                onChange={(e) => setForm({ ...form, number: e.target.value })}
                 required
               />
             </div>
           </div>
-          {/* <div className="col-md-12">
-            <div className="form-group">
-              <div className="form-group">
-                <label>Subject</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Subject"
-                  name="Subject"
-                  required
-                />
-              </div>
-            </div>
-          </div> */}
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="exampleInputEmail1">Contact Email</label>
+              <label htmlhtmlFor="exampleInputEmail1">Contact Email</label>
               <input
                 type="email"
                 className="form-control"
@@ -60,47 +90,32 @@ const Home = () => {
                 aria-describedby="emailHelp"
                 placeholder="Enter email"
                 name="email"
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
                 required
               />
             </div>
             <div className="form-group">
-              <label for="exampleFormControlSelect1">Country</label>
-              <Select options={countries} />
-              {/* <select
-                className="form-control"
-                id="exampleFormControlSelect1"
-                name="country"
-                required
-              >
-                <option hidden selected value="">
-                  Select Country
-                </option>
-                <option>Irbid</option>
-                <option>Ajloun</option>
-                <option>Jarash</option>
-                <option>Mafraq</option>
-                <option>Balqa</option>
-                <option>Amman</option>
-                <option>Zarqa</option>
-                <option>Madaba</option>
-                <option>Karak</option>
-                <option>Tafila</option>
-                <option>Amman</option>
-                <option>Aqaba</option>
-              </select> */}
+              <label htmlFor="exampleFormControlSelect1">Country</label>
+              <Select
+                options={countries}
+                onChange={(e) => setForm({ ...form, country: e.value })}
+              />
             </div>
           </div>
         </div>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="exampleFormControlSelect1">
+              <label htmlhtmlFor="exampleFormControlSelect1">
                 Complainant Status
               </label>
               <select
                 className="form-control"
                 id="exampleFormControlSelect1"
-                name="education_level"
+                name="complainant_status"
+                onChange={(e) =>
+                  setForm({ ...form, complainant_status: e.target.value })
+                }
                 required
               >
                 <option hidden selected value>
@@ -113,84 +128,135 @@ const Home = () => {
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="exampleFormControlSelect1" className="d-block">
-                Date of incident
+              <label
+                htmlhtmlFor="exampleFormControlSelect1"
+                className="d-block"
+              >
+                Date & Time of incident
               </label>
               <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
+                selected={theDate}
+                onChange={(date) => {
+                  setTheDate(date);
+                  setStartDate(date.toISOString().split("T")[0]);
+                }}
                 className="form-control d-block"
-              />
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                className="form-control d-block ml-4"
+                dateFormat="Pp"
               />
             </div>
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
           </div>
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="exampleFormControlSelect1">
+              <label htmlhtmlFor="exampleFormControlSelect1">
                 Basis of Complaint
               </label>
               <Select
                 isMulti
-                name="colors"
+                name="complaint_basis"
                 options={basisOfComplaint}
                 className="basic-multi-select"
                 classNamePrefix="select"
                 placeholder="Multiple Select"
+                onChange={(value) => {
+                  setForm({ ...form, complaint_basis: value });
+                  // console.log(value);
+                }}
               />
             </div>
-            <div className="mt-2 d-block">
-              <label className="mr-5">Gender</label>
-            </div>
-            <div className="d-inline mr-5">
-              <div className="custom-control custom-radio d-inline">
-                <input
-                  type="radio"
-                  id="customRadio1"
-                  name="gender"
-                  className="custom-control-input"
-                  defaultValue="male"
-                  required
-                />
-                <label className="custom-control-label" htmlFor="customRadio1">
-                  Male
-                </label>
-              </div>
-              <div className="custom-control custom-radio d-inline ml-1">
-                <input
-                  type="radio"
-                  id="customRadio2"
-                  name="gender"
-                  className="custom-control-input"
-                  defaultValue="female"
-                  required
-                />
-                <label className="custom-control-label" htmlFor="customRadio2">
-                  Female
-                </label>
-              </div>
-            </div>
-            <div className="custom-control custom-checkbox d-inline ml-5">
-              <input
-                type="checkbox"
-                className="custom-control-input"
-                id="customCheck1"
-                name="it_background"
-                required
-              />
-              <label className="custom-control-label" htmlFor="customCheck1">
-                Has IT background
+            <div className="form-group">
+              <label
+                htmlhtmlFor="exampleFormControlSelect1"
+                className="d-block"
+              >
+                Time of incident
               </label>
+              <input
+                type="text"
+                className="form-control d-inline"
+                placeholder="Select Incident time"
+                onFocus={() => setShowTime(true)}
+                onBlur={() => setShowTime(false)}
+                value={time}
+              />
+
+              {showTime ? (
+                <div className="time-keeper">
+                  <Timekeeper
+                    time={time}
+                    onChange={(time) => {
+                      setTime(time.formatted24);
+                      // setForm({ ...form, time: time.formatted24 });
+                    }}
+                    onDoneClick={() => setShowTime(false)}
+                    switchToMinuteOnHourSelect
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
-          <div className="col-md-6"></div>
-          <div className="col-md-6"></div>
+          <div className="col-md-12">
+            <div className="form-group">
+              <div className="form-group">
+                <label>Subject</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Subject"
+                  name="subject"
+                  onChange={(e) => {
+                    setForm({ ...form, subject: e.target.value });
+                  }}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div className="col-md-12">
+            <div className="form-group">
+              <div className="form-group">
+                <label>Summary of complaint/ issue</label>
+                <textarea
+                  type="text-area"
+                  className="form-control"
+                  placeholder="Summary of complaint/issue"
+                  name="body"
+                  rows="5"
+                  onChange={(e) => {
+                    setForm({ ...form, body: e.target.value });
+                  }}
+                  required
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-12">
+            <div className="form-group">
+              <div className="form-group">
+                <label>Prefered outcome/ Suggested solution</label>
+                <textarea
+                  type="text-area"
+                  className="form-control"
+                  placeholder="Prefered outcome/ Suggested solution"
+                  name="solution"
+                  rows="4"
+                  onChange={(e) => {
+                    setForm({ ...form, solution: e.target.value });
+                  }}
+                  required
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-6">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              onClick={submitHandler}
+            >
+              Submit
+            </button>
+          </div>
         </div>
       </div>
     </div>

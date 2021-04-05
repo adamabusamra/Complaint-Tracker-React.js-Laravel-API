@@ -1,7 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Register = () => {
+const Register = ({ history }) => {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+  });
+  const submitHandler = async () => {
+    try {
+      let response = await fetch("http://127.0.0.1:8000/api/register", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          password_confirmation: form.password_confirmation,
+        }),
+      });
+      let data = await response.json();
+      // console.log(data.user);
+      // console.log(data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("sanctum-token", JSON.stringify(data.token));
+      history.push("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <div className="container">
@@ -26,6 +57,7 @@ const Register = () => {
                   id="name"
                   name="name"
                   placeholder="Enter name"
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
                 />
               </div>
               <div className="form-group">
@@ -36,6 +68,7 @@ const Register = () => {
                   id="email"
                   name="email"
                   placeholder="Enter email"
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
               </div>
               <div className="form-group">
@@ -46,6 +79,9 @@ const Register = () => {
                   id="email"
                   name="password"
                   placeholder="Enter Password"
+                  onChange={(e) =>
+                    setForm({ ...form, password: e.target.value })
+                  }
                 />
               </div>
               <div className="form-group">
@@ -56,9 +92,17 @@ const Register = () => {
                   id="email"
                   name="password_confirmed"
                   placeholder="Confirm Password"
+                  onChange={(e) =>
+                    setForm({ ...form, password_confirmation: e.target.value })
+                  }
                 />
               </div>
-              <button type="submit" className="btn btn-dark col-12" id="submit">
+              <button
+                type="submit"
+                className="btn btn-dark col-12"
+                id="submit"
+                onClick={submitHandler}
+              >
                 Submit
               </button>
             </div>

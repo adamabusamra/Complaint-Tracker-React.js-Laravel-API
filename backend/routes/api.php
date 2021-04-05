@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ComplaintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Public routes
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+// Protected Routes
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::apiResource('/complaints', ComplaintController::class);
+
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
+

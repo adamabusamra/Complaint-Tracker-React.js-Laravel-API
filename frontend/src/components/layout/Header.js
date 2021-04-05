@@ -8,21 +8,53 @@ const Header = () => {
         Complaint Tracker
       </a>
       <ul className="navbar-nav ml-auto">
-        <li className="nav-item active">
-          <Link to="/" className="nav-link">
-            Home
-          </Link>
-        </li>
-        <li className="nav-item active">
-          <Link to="/about" className="nav-link">
-            About
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/login" className="nav-link active">
-            Login
-          </Link>
-        </li>
+        {localStorage.getItem("sanctum-token") ? (
+          <>
+            <li className="nav-item active">
+              <Link to="/" className="nav-link">
+                Home
+              </Link>
+            </li>
+            <li className="nav-item active">
+              <Link to="/complaints" className="nav-link">
+                Complaints
+              </Link>
+            </li>
+            <li className="nav-item active">
+              <Link to="/about" className="nav-link">
+                About
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/logout" className="nav-link active">
+                Logout
+              </Link>
+            </li>
+          </>
+        ) : (
+          <>
+            <li className="nav-item active">
+              <Link to="/" className="nav-link">
+                Home
+              </Link>
+            </li>
+            <li className="nav-item active">
+              <Link to="/complaints" className="nav-link">
+                Complaints
+              </Link>
+            </li>
+            <li className="nav-item active">
+              <Link to="/about" className="nav-link">
+                About
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/login" className="nav-link active">
+                Login
+              </Link>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
