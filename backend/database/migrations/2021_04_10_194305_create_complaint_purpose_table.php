@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePurposeUserTable extends Migration
+class CreateComplaintPurposeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreatePurposeUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('purpose_user', function (Blueprint $table) {
+        Schema::create('complaint_purpose', function (Blueprint $table) {
             $table->id();
+            $table->integer('complaint_id');
             $table->integer('purpose_id');
-            $table->integer('user_id');
         });
     }
 
@@ -27,8 +27,6 @@ class CreatePurposeUserTable extends Migration
      */
     public function down()
     {
-        Schema::table('purpose_user', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('complaint_purpose');
     }
 }

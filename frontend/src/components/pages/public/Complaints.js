@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
+import axios from "axios";
+import { auth } from "../../../custom-middleware";
 
-const Complaints = (history) => {
+const Complaints = ({ history }) => {
   const [complaints, setComplaints] = useState([]);
   useEffect(async () => {
-    console.log(JSON.parse(localStorage.getItem("sanctum-token")));
+    const authenticate = await auth();
+    console.log(authenticate);
+    if (!authenticate) {
+      history.push("/login");
+    }
     try {
-      let response = await fetch("http://127.0.0.1:8000/api/complaints", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${JSON.parse(
-            localStorage.getItem("sanctum-token")
-          )}`,
-        },
-      });
-      let data = await response.json();
-      console.log(data);
-      setComplaints([...data]);
-      // history.push("/");
+      axios.defaults.withCredentials = true;
+      // Sending the token since we are accessing protected route
+      axios.defaults.headers.common["Authorization"] = `Bearer ${JSON.parse(
+        localStorage.getItem("sanctum-token")
+      )}`;
+      await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie");
+      let response = await axios.get("http://127.0.0.1:8000/api/complaints");
+      console.log(response);
+      setComplaints([...response.data]);
     } catch (error) {
-      console.error(error);
+      if (error.response) {
+        // client received an error response (5xx, 4xx)
+        console.log(error.response.data.message);
+      } else if (error.request) {
+        // client never received a response, or request never left
+        console.log(error.request);
+      } else {
+        // anything else
+        console.log(error);
+      }
     }
   }, []);
   return (
@@ -39,8 +49,8 @@ const Complaints = (history) => {
                 <th scope="col">Incident date</th>
                 <th scope="col">Status</th>
                 <th scope="col">Issue_date</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
+                {/* <th scope="col">Edit</th>
+                <th scope="col">Delete</th> */}
               </tr>
             </thead>
             <tbody>
@@ -66,7 +76,7 @@ const Complaints = (history) => {
                       </td>
                     ) : null}
                     <td>{moment(item.created_at).format("LLL")}</td>
-                    <td>
+                    {/* <td>
                       <a href="" className="btn btn-outline-success">
                         Edit
                       </a>
@@ -75,7 +85,7 @@ const Complaints = (history) => {
                       <a href="" className="btn btn-outline-danger">
                         Delete
                       </a>
-                    </td>
+                    </td> */}
                   </tr>
                 );
               })}

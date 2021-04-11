@@ -1,34 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { guest } from "../../../custom-middleware";
 
 const Login = ({ history }) => {
+  useEffect(() => {
+    const isGuest = guest();
+    console.log(isGuest);
+    if (!isGuest) {
+      history.push("/");
+    }
+  }, []);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
   const submitHandler = async () => {
     try {
-      let response = await fetch("http://127.0.0.1:8000/api/login", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password,
-        }),
-      });
-      let data = await response.json();
-      // console.log(data.user);
-      // console.log(data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("sanctum-token", JSON.stringify(data.token));
-      if (data.token) {
-        history.push("/");
-      }
+      // Cause we are authenticating from a different domain than the backend we must configure "CORS" by setting the bellow config
+      axios.defaults.withCredentials = true;
+
+      /* To authenticate we should first make a request to the /sanctum/csrf-cookie endpoint to initialize CSRF protection for the application
+      Laravel will set an XSRF-TOKEN cookie containing the current CSRF token.
+      The token should then be passed in an X-XSRF-TOKEN header on subsequent requests, which some HTTP client libraries like Axios and the Angular HttpClient will do automatically for you */
+      await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie");
+
+      // Now we can hit the login route and axios like we said will include the CSRF token
+      let response = await axios.post("http://127.0.0.1:8000/api/login", form);
+      console.log(response.data);
+
+      // Storing the response in the session so we can send token when accessing protected routes
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem(
+        "sanctum-token",
+        JSON.stringify(response.data.token)
+      );
+
+      // redirect to home page
+      history.push("/");
     } catch (error) {
-      console.error(error);
+      if (error.response) {
+        // client received an error response (5xx, 4xx)
+        console.log(error.response.data.message);
+      } else if (error.request) {
+        // client never received a response, or request never left
+        console.log(error.request);
+      } else {
+        // anything else
+        console.log(error);
+      }
     }
   };
   return (

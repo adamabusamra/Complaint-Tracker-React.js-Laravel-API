@@ -1,14 +1,10 @@
+/* eslint-disable */
 import React from "react";
 //Styles
 import "./assets/css/styles.css";
 
 // React router
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 //Navbar
 import Header from "./components/layout/Header";
@@ -37,6 +33,7 @@ const PublicLayout = ({ exact, path, component: Component, ...rest }) => {
       render={(routeProps) => {
         return (
           <>
+            {/* Include public navbar on all pages */}
             <Header {...routeProps} />
             <div className="container">
               <Component {...routeProps} />
@@ -56,6 +53,7 @@ const AdminLayout = ({ exact, path, component: Component, ...rest }) => {
       render={(routeProps) => {
         return (
           <>
+            {/* Include admin navbar on all pages */}
             <AdminHeader {...routeProps} />
             <SideBar {...routeProps} />
             <div className="my-container">
@@ -71,16 +69,8 @@ const AdminLayout = ({ exact, path, component: Component, ...rest }) => {
 };
 
 function App() {
-  const clearStorage = () => {
-    localStorage.removeItem("sanctum-token");
-
-    localStorage.removeItem("user");
-  };
   return (
     <Router>
-      {/* Include navbar on all pages */}
-      {/* <Header /> */}
-
       <Switch>
         {/* Public Routes */}
         <PublicLayout exact path="/" component={Home} />
@@ -89,14 +79,6 @@ function App() {
         <PublicLayout exact path="/register" component={Register} />
         <PublicLayout exact path="/complaints" component={MyCompliants} />
         <PublicLayout exact path="/complaints" component={MyCompliants} />
-        <PublicLayout exact path="/Logout">
-          {clearStorage}
-          <Redirect
-            to={{
-              pathname: "/login",
-            }}
-          />
-        </PublicLayout>
         {/* Admin Routes */}
         <AdminLayout exact path="/admin" component={AdminHome} />
         <AdminLayout exact path="/admin/login" component={AdminLogin} />

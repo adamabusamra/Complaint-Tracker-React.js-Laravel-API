@@ -1,7 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ history }) => {
+  const clearStorage = () => {
+    localStorage.removeItem("sanctum-token");
+    localStorage.removeItem("user");
+
+    history.push("login");
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-5">
       <a className="navbar-brand" href="#">
@@ -26,9 +32,9 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/logout" className="nav-link active">
+              <a href="#" onClick={clearStorage} className="nav-link active">
                 Logout
-              </Link>
+              </a>
             </li>
           </>
         ) : (

@@ -1,26 +1,26 @@
 [
-  { "value": "Race", "label": "Race" },
-  { "value": "Creed", "label": "Creed" },
-  { "value": "Religon", "label": "Religon" },
-  { "value": "Sex", "label": "Sex" },
-  { "value": "Culture", "label": "Culture" },
-  { "value": "Color", "label": "Color" },
-  { "value": "Age", "label": "Age" },
+  { "value": "1", "label": "Race" },
+  { "value": "2", "label": "Creed" },
+  { "value": "3", "label": "Religon" },
+  { "value": "4", "label": "Sex" },
+  { "value": "5", "label": "Culture" },
+  { "value": "6", "label": "Color" },
+  { "value": "7", "label": "Age" },
   {
-    "value": "Mental or pyhsical disability",
+    "value": "8",
     "label": "Mental or pyhsical disability"
   },
-  { "value": "Veteran Status", "label": "Veteran Status" },
-  { "value": "Genetic Information", "label": "Genetic Information" },
-  { "value": "National Origin", "label": "National Origin" },
-  { "value": "Sexual Orientation", "label": "Sexual Orientation" },
+  { "value": "9", "label": "Veteran Status" },
+  { "value": "10", "label": "Genetic Information" },
+  { "value": "11", "label": "National Origin" },
+  { "value": "12", "label": "Sexual Orientation" },
   {
-    "value": "Social Origin or Condition",
+    "value": "13",
     "label": "Social Origin or Condition"
   },
-  { "value": "Retaliation", "label": "Retaliation" },
-  { "value": "Political Belief", "label": "Political Belief" },
-  { "value": "Marital Status", "label": "Marital Status" },
-  { "value": "Ancestry", "label": "Ancestry" },
-  { "value": "Other", "label": "Other" }
+  { "value": "14", "label": "Retaliation" },
+  { "value": "15", "label": "Political Belief" },
+  { "value": "16", "label": "Marital Status" },
+  { "value": "17", "label": "Ancestry" },
+  { "value": "18", "label": "Other" }
 ]

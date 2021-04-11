@@ -9,4 +9,10 @@ class Complaint extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function purposes()
+    {
+        return $this->belongsToMany(ComplaintReason::class,"complaint_purpose",'complaint_id','purpose_id');
+    }
+
 }

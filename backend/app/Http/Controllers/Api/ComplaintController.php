@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Complaint;
+use App\Models\ComplaintReason;
 use Illuminate\Http\Request;
 
 class ComplaintController extends Controller
@@ -26,7 +27,6 @@ class ComplaintController extends Controller
      */
     public function store(Request $request)
     {
-//        return response($request->data);
         $data = $request->data;
         $complaint = Complaint::create([
             'name' => $data['name'],
@@ -40,6 +40,11 @@ class ComplaintController extends Controller
             'subject' => $data['subject'],
 
         ]);
+        foreach ($data['complaint_basis'] as $reason) {
+            $complaint->purposes()->attach($reason['value']);
+        }
+
+
         if ($complaint) {
             return response([
                 'message' => 'Success'
@@ -85,5 +90,31 @@ class ComplaintController extends Controller
     public function destroy(Complaint $complaint)
     {
         //
+    }
+
+    public function approve($id)
+    {
+//        return response($id);
+        $complaint = Complaint::findOrFail($id);
+        $complaint->update([
+            "complaint_status" => "approved"
+
+        ]);
+        return response([
+            'message' => 'Success'
+        ], 201);
+    }
+
+    public function dismiss($id)
+    {
+//        return response($id);
+        $complaint = Complaint::findOrFail($id);
+        $complaint->update([
+            "complaint_status" => "dismissed"
+
+        ]);
+        return response([
+            'message' => 'Success'
+        ], 201);
     }
 }

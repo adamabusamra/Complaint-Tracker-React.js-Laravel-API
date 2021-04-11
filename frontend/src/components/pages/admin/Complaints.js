@@ -1,27 +1,73 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
+import axios from "axios";
 
-const Complaints = (history) => {
+const Complaints = ({ history }) => {
   const [complaints, setComplaints] = useState([]);
-  useEffect(async () => {
-    console.log(JSON.parse(localStorage.getItem("sanctum-token")));
+  const approveHandler = async (id) => {
+    console.log(id);
     try {
-      let response = await fetch("http://127.0.0.1:8000/api/complaints", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${JSON.parse(
-            localStorage.getItem("sanctum-token")
-          )}`,
-        },
-      });
+      let response = await fetch(
+        "http://127.0.0.1:8000/api/admin/approve/" + id,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
       let data = await response.json();
       console.log(data);
-      setComplaints([...data]);
-      // history.push("/");
+      setComplaints([...complaints]);
+      history.go(0);
     } catch (error) {
       console.error(error);
+    }
+  };
+  const dismissHandler = async (id) => {
+    console.log(id);
+    try {
+      let response = await fetch(
+        "http://127.0.0.1:8000/api/admin/dismiss/" + id,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      let data = await response.json();
+      console.log(data);
+      setComplaints((prev) => [...prev]);
+      history.go(0);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(async () => {
+    try {
+      axios.defaults.withCredentials = true;
+      // Sending the token since we are accessing protected route
+      axios.defaults.headers.common["Authorization"] = `Bearer ${JSON.parse(
+        localStorage.getItem("sanctum-token")
+      )}`;
+      await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie");
+      let response = await axios.get("http://127.0.0.1:8000/api/complaints");
+      console.log(response);
+      setComplaints([...response.data]);
+    } catch (error) {
+      if (error.response) {
+        // client received an error response (5xx, 4xx)
+        console.log(error.response.data.message);
+      } else if (error.request) {
+        // client never received a response, or request never left
+        console.log(error.request);
+      } else {
+        // anything else
+        console.log(error);
+      }
     }
   }, []);
   return (
@@ -67,14 +113,21 @@ const Complaints = (history) => {
                     ) : null}
                     <td>{moment(item.created_at).format("LLL")}</td>
                     <td>
-                      <a href="" className="btn btn-outline-success">
+                      <button
+                        href="#"
+                        onClick={() => approveHandler(item.id)}
+                        className="btn btn-outline-success"
+                      >
                         Approve
-                      </a>
+                      </button>
                     </td>
                     <td>
-                      <a href="" className="btn btn-outline-danger">
+                      <button
+                        onClick={() => dismissHandler(item.id)}
+                        className="btn btn-outline-danger"
+                      >
                         Dismiss
-                      </a>
+                      </button>
                     </td>
                   </tr>
                 );

@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import countries from "../../../assets/data/countries.json";
 import basisOfComplaint from "../../../assets/data/basisOfComplaints.json";
 import DatePicker from "react-datepicker";
 import moment from "moment";
+import axios from "axios";
+import { auth } from "../../../custom-middleware";
+
 // import TimePicker from "react-time-picker";
 import Timekeeper from "react-timekeeper";
 
@@ -13,6 +16,14 @@ import "../../../assets/css/react-date-picker.css";
 // import "react-datepicker/dist/react-datepicker.css";
 
 const Home = ({ history }) => {
+  useEffect(async () => {
+    const authenticate = await auth();
+    console.log(authenticate);
+    if (!authenticate) {
+      history.push("/login");
+    }
+  }, []);
+
   const [startDate, setStartDate] = useState(new Date());
   const [theDate, setTheDate] = useState(new Date());
   const [time, setTime] = useState("10:30");
@@ -21,31 +32,38 @@ const Home = ({ history }) => {
   const submitHandler = async () => {
     let newForm = { ...form };
     newForm.incident_datetime = `${startDate} ${time}`;
-    console.log(JSON.parse(localStorage.getItem("sanctum-token")));
     try {
-      let response = await fetch("http://127.0.0.1:8000/api/complaints", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${JSON.parse(
-            localStorage.getItem("sanctum-token")
-          )}`,
-        },
-        body: JSON.stringify({
-          data: newForm,
-        }),
+      axios.defaults.withCredentials = true;
+      // Sending the token since we are accessing protected route
+      axios.defaults.headers.common["Authorization"] = `Bearer ${JSON.parse(
+        localStorage.getItem("sanctum-token")
+      )}`;
+      await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie");
+      let response = await axios.post("http://127.0.0.1:8000/api/complaints", {
+        data: newForm,
       });
-      let data = await response.json();
-      console.log(data);
-      // console.log(data.token);
-      // localStorage.setItem("user", JSON.stringify(data.user));
-      // localStorage.setItem("sanctum-token", JSON.stringify(data.token));
-      if (data.message == "Success") {
-        history.push("/complaints");
-      }
+      console.log(response.data);
+      history.push("/complaints");
     } catch (error) {
-      console.error(error);
+      if (error.response) {
+        // client received an error response (5xx, 4xx)
+        console.log(error.response);
+        console.log(error.response.data.message);
+        if (error.response.status == 401) {
+          if (localStorage.getItem("sanctum-token")) {
+            localStorage.removeItem("sanctum-token");
+            history.push("/login");
+          } else {
+            history.push("/login");
+          }
+        }
+      } else if (error.request) {
+        // client never received a response, or request never left
+        console.log(error.request);
+      } else {
+        // anything else
+        console.log(error);
+      }
     }
   };
   return (
@@ -82,7 +100,7 @@ const Home = ({ history }) => {
           </div>
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlhtmlFor="exampleInputEmail1">Contact Email</label>
+              <label htmlFor="exampleInputEmail1">Contact Email</label>
               <input
                 type="email"
                 className="form-control"
@@ -106,7 +124,7 @@ const Home = ({ history }) => {
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlhtmlFor="exampleFormControlSelect1">
+              <label htmlFor="exampleFormControlSelect1">
                 Complainant Status
               </label>
               <select
@@ -118,7 +136,7 @@ const Home = ({ history }) => {
                 }
                 required
               >
-                <option hidden selected value>
+                <option hidden selected value="">
                   Select Status
                 </option>
                 <option>Employee</option>
@@ -128,10 +146,7 @@ const Home = ({ history }) => {
               </select>
             </div>
             <div className="form-group">
-              <label
-                htmlhtmlFor="exampleFormControlSelect1"
-                className="d-block"
-              >
+              <label htmlFor="exampleFormControlSelect1" className="d-block">
                 Date & Time of incident
               </label>
               <DatePicker
@@ -147,7 +162,7 @@ const Home = ({ history }) => {
           </div>
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlhtmlFor="exampleFormControlSelect1">
+              <label htmlFor="exampleFormControlSelect1">
                 Basis of Complaint
               </label>
               <Select
@@ -159,15 +174,11 @@ const Home = ({ history }) => {
                 placeholder="Multiple Select"
                 onChange={(value) => {
                   setForm({ ...form, complaint_basis: value });
-                  // console.log(value);
                 }}
               />
             </div>
             <div className="form-group">
-              <label
-                htmlhtmlFor="exampleFormControlSelect1"
-                className="d-block"
-              >
+              <label htmlFor="exampleFormControlSelect1" className="d-block">
                 Time of incident
               </label>
               <input

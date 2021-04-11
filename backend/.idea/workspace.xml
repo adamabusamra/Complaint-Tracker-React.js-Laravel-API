@@ -2,20 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84a91e90-34a4-45b9-8981-06f3bf8cb922" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/Http/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/ComplaintController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/ComplaintController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Middleware/VerifyCsrfToken.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Middleware/VerifyCsrfToken.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Complaint.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Complaint.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/ComplaintReason.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/ComplaintReason.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/cors.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/cors.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeders/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/DatabaseSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_04_04_071610_create_purpose_user_table.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/assets/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/assets/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/assets/data/basisOfComplaints.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/assets/data/basisOfComplaints.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/layout/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/layout/Header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/pages/admin/Complaints.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/pages/admin/Complaints.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/pages/admin/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/pages/admin/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/pages/public/Complaints.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/pages/public/Complaints.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/pages/public/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/pages/public/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/pages/public/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/pages/public/Login.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/pages/public/Register.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/pages/public/Register.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,11 +172,26 @@
       <option name="presentableId" value="Default" />
       <updated>1617556851915</updated>
       <workItem from="1617556858384" duration="3078000" />
-      <workItem from="1617652353920" duration="6449000" />
+      <workItem from="1617652353920" duration="6670000" />
+      <workItem from="1617702916401" duration="2814000" />
+      <workItem from="1618064066682" duration="11753000" />
+      <workItem from="1618090275235" duration="1008000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
